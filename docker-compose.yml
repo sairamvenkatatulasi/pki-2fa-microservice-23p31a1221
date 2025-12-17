@@ -1,0 +1,16 @@
+version: "3.9"
+services:
+  app:
+    build: .
+    container_name: pki-2fa-app
+    ports:
+      - "8080:8080"
+    volumes:
+      - seed-data:/data
+      - cron-logs:/cron
+    environment:
+      - TZ=UTC
+
+volumes:
+  seed-data:
+  cron-logs:

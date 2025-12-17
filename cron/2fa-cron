@@ -1,0 +1,1 @@
+* * * * * /app/cron/run_2fa.sh >> /var/log/cron.log 2>&1
