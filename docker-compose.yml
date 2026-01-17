@@ -1,16 +1,13 @@
 version: "3.9"
+
 services:
-  app:
+  pki-2fa-app:
     build: .
     container_name: pki-2fa-app
     ports:
       - "8080:8080"
     volumes:
-      - seed-data:/data
-      - cron-logs:/cron
-    environment:
-      - TZ=UTC
-
-volumes:
-  seed-data:
-  cron-logs:
+      - C:/Users/Tulasi/Desktop/pki-2fa-microservice-23p31a1221/keys:/keys
+      - C:/Users/Tulasi/Desktop/pki-2fa-microservice-23p31a1221/data:/data
+      - C:/Users/Tulasi/Desktop/pki-2fa-microservice-23p31a1221/cron:/cron
+    restart: always

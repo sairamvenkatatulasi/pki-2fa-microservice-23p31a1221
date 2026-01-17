@@ -1,11 +1,15 @@
-#!/bin/bash
-set -e
+#!/bin/sh
 
-CODE_JSON=$(curl -s http://localhost:8080/generate-2fa || true)
-CODE=$(echo "$CODE_JSON" | python -c "import sys, json; d=json.load(sys.stdin); print(d.get('code', ''))" 2>/dev/null || echo "")
+SEED=$(cat /data/seed.txt)
+NOW=$(date +%s)
+COUNTER=$((NOW / 30))
 
-if [ -n "$CODE" ]; then
-  mkdir -p /cron
-  TS=$(date -u +"%Y-%m-%d %H:%M:%S")
-  echo "$TS - 2FA Code: $CODE" > /cron/last_code.txt
-fi
+python - <<EOF
+import hmac, hashlib, struct
+key = bytes.fromhex("$SEED")
+msg = struct.pack(">Q", $COUNTER)
+h = hmac.new(key, msg, hashlib.sha1).digest()
+o = h[-1] & 0x0F
+code = (struct.unpack(">I", h[o:o+4])[0] & 0x7fffffff) % 1000000
+print(str(code).zfill(6))
+EOF
